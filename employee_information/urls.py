@@ -77,6 +77,11 @@ urlpatterns = [
     path('save_pagamento', views.save_pagamento, name='save_pagamento'),
     path('delete_pagamento', views.delete_pagamento, name='delete_pagamento'),
     path('pagamento/', views.pagamento, name='pagamento'),
+    
+    path('pagamento_list1', views.pagamento_list1, name='pagamento_list1'),
+    path('manage_pagamento1', views.manage_pagamento1, name='manage_pagamento1'),
+    path('save_pagamento1', views.save_pagamento1, name='save_pagamento1'),
+    path('delete_pagamento1', views.delete_pagamento1, name='delete_pagamento1'),
 
     
     #path('download_contrato', views.download_contrato, name='download_contrato'),
