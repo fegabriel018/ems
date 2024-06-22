@@ -1,0 +1,80 @@
+{% extends "employee_information/base.html" %} 
+{% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Backup</h4>
+            <div class="text-start">
+                
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" id="backup_database">
+                    <i class="material-icons mdc-button__icon">backup</i>
+                    <span> Backup </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <div id="backup_message"></div> <!-- Div para exibir a mensagem de backup -->
+    </div>
+</div>
+{% endblock pageContent %} 
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Adicionar Quadra", "{% url 'manage_departments-page' %}")
+        });
+        $('#backup_database').click(function() {
+            if (confirm("Tens certeza que queres fazer o backup da base de dados?")) {
+                // Se o usuário confirmar o backup, chamar a função para realizar o backup
+                performBackup();
+            }
+        });
+    });
+
+    function performBackup() {
+        $.ajax({
+            url: "{% url 'backup-database' %}",
+            method: "GET",
+            success: function(response) {
+                // Mostrar a mensagem de backup na div adequada
+                $('#backup_message').html('<p>Backup realizado com sucesso. Arquivo: ' + response.backup_file + '</p>');
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+                alert("Ocorreu um erro ao realizar o backup.");
+            }
+        });
+    }
+
+    function delete_department($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete-department' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err);
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        });
+    }
+</script>
+{% endblock ScriptBlock %}

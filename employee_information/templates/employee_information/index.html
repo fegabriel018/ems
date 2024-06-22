@@ -1,0 +1,347 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Centralidade Horizonte do Cuito</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'employee_information/assets/img/ho1.png' %}" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700|Raleway:300,400,400i,500,500i,700,800,900" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'employee_information/t/assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'employee_information/t/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'employee_information/t/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'employee_information/t/assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'employee_information/t/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'employee_information/t/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'employee_information/t/assets/css/style.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+ 
+  
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex justify-content-between">
+
+      <div class="logo">
+        <h1><a href="/"><img src="{% static 'employee_information/assets/img/ho1.png' %}" alt="" style="width: 110px; "> </a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="/">Início</a></li>
+          <li><a class="nav-link scrollto" href="#">Sobre</a></li>
+          <li><a class="nav-link scrollto" href="#">Contacto</a></li>
+          <li><a href="#">Blog</a></li>
+
+          <li><a class="nav-link scrollto" href="{% url 'home-page' %}"><img src="{% static 'employee_information/assets/img/login.png' %}" alt="Acessar" style="width: 32px; height: 32px;"> Acessar</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container">
+      <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+        <ol id="hero-carousel-indicators" class="carousel-indicators"></ol>
+
+        <div class="carousel-inner" role="listbox">
+
+          <div class="carousel-item active" style="background-image: url('{% static 'employee_information/assets/img/cent.jpg' %}');">
+            <div class="carousel-container">
+              <div class="container">
+                <h2 class="animate__animated animate__fadeInDown"> </h2>
+                <p class="animate__animated animate__fadeInUp">Centralidade Horizonte do Cuito: onde seus sonhos ganham forma</p>
+                <!--a href="#about" class="btn-get-started scrollto animate__animated animate__fadeInUp">Get Started</a-->
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item" style="background-image: url('{% static 'employee_information/assets/img/4.jpg' %}');">
+            <div class="carousel-container">
+              <div class="container">
+                <h2 class="animate__animated animate__fadeInDown"></h2>
+                <p class="animate__animated animate__fadeInUp">O lugar perfeito para criar memórias inesquecíveis</p>
+                <!--a href="#about" class="btn-get-started scrollto animate__animated animate__fadeInUp">Get Started</a-->
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item" style="background-image: url('{% static 'employee_information/assets/img/c.jpg' %}');">
+            <div class="carousel-container">
+              <div class="container">
+                <h2 class="animate__animated animate__fadeInDown"></h2>
+                <p class="animate__animated animate__fadeInUp">Modernidade e funcionalidade em um só lugar.</p>
+                <!--a href="#about" class="btn-get-started scrollto animate__animated animate__fadeInUp">Get Started</a-->
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item" style="background-image: url('{% static 'employee_information/assets/img/h.jpg' %}');">
+            <div class="carousel-container">
+              <div class="container">
+                <h2 class="animate__animated animate__fadeInDown"></h2>
+                <p class="animate__animated animate__fadeInUp">Conforto e qualidade de vida em cada detalhe.</p>
+                <!--a href="#about" class="btn-get-started scrollto animate__animated animate__fadeInUp">Get Started</a-->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
+          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+        </a>
+
+      </div>
+    </div>
+  </section><!-- End Hero Section -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <div id="about" class="about-area area-padding">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="section-headline text-center">
+              <h2>Sobre Nós</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- single-well start-->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="well-left">
+              <div class="single-well">
+                <a href="#">
+                  <img src="{% static 'employee_information/assets/img/9.jpg' %}" alt="">
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- single-well end-->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="well-middle">
+              <div class="single-well">
+                <a href="#">
+                  <h4 class="sec-head">Centralidade Horizonte do Cuito</h4>
+                </a>
+                <p>
+                  A centralidade foi erguida no âmbito do programa “Meu Sonho, Minha Casa”, uma parceria entre a Kora Angola e o Executivo, foi inaugurada a primeira fase em 2017 e é administrada por Henrique Arsénio.
+                  <br>As obras, implantadas numa área de 300 hectares, tiveram iní­cio em 2011, com um acompanha­mento faseado do governo do Bié que almeja acima de tudo justiça social e o bem-estar dos angola­nos residentes nesta região.
+                  <br> A centralidade dispõe de:
+                </p>
+                <ul>
+                  <li>
+                    <i class="bi bi-check"></i> Jardins-de-infância
+                  </li>
+                  <li>
+                    <i class="bi bi-check"></i> Centro de saúde
+                  </li>
+                  <li>
+                    <i class="bi bi-check"></i> Escola do ensino primário
+                  </li>
+                  <li>
+                    <i class="bi bi-check"></i> Escola do ensino secundário do I ciclo
+                  </li>
+                  <li>
+                    <i class="bi bi-check"></i> 3 Escolas do ensino médio
+                  </li>
+                  <li>
+                    <i class="bi bi-check"></i> Quadra polidesortiva
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- End col-->
+        </div>
+      </div>
+    </div><!-- End About Section -->
+
+
+
+    
+    <!-- ======= Rviews Section ======= -->
+    <div class="">
+      <div class="row g-0">
+        <div class="col-lg-6">
+          <img src="{% static 'employee_information/assets/img/4.jpg' %}" alt="" class="img-fluid">
+        </div>
+        <div class="col-lg-6 work-right-text d-flex align-items-center">
+          <div class="px-5 py-5 py-lg-0">
+            <h2>Viva cercado de conforto e segurança</h2>
+            <h5>É na Centralidade Horizonte do Cuito que encontramos o equilíbrio perfeito entre modernidade e tranquilidade.</h5>
+            <br><br><br><br><br>
+            <!--a href="#contact" class="ready-btn scrollto">Contact us</a-->
+          </div>
+        </div>
+      </div>
+    </div><!-- End Rviews Section -->
+
+    
+ 
+
+
+
+
+    <!-- ======= Suscribe Section ======= -->
+  <div class="suscribe-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs=12">
+            <div class="suscribe-text text-center">
+              <h3></h3>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- End Suscribe Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <div id="contact" class="contact-area">
+      <div class="contact-inner area-padding">
+        <div class="contact-overly"></div>
+        <div class="container ">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="section-headline text-center">
+                <h2>Localização Geográfica</h2>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+
+            <!-- Start Google Map -->
+            <div class="col-md-6" >
+              <!-- Start Map -->
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3927.8583533379155!2d16.913348815227!3d-12.3833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1bbd5edfb8d6c8d3%3A0x65c6f1bb3edb5b8!2sCuito%2C%20Bi%C3%A9%2C%20Angola!5e0!3m2!1sen!2sao!4v1540447494452" width="100%" height="380" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+              <!-- End Map -->
+            </div>
+ 
+          </div>
+        </div>
+      </div>
+    </div><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer>
+    <div class="footer-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="footer-content">
+              <div class="footer-head">
+                <div class="footer-logo">
+                  <h2><img src="{% static 'employee_information/assets/img/ho1.png' %}" alt="" style="width: 110px; "></h2>
+                </div>
+
+                <p>Na busca por um lar, o conforto é essencial. É na Centralidade Horizonte do Cuito que 
+                  encontramos o equilíbrio perfeito entre modernidade e tranquilidade, 
+                  oferecendo um ambiente que acolhe e proporciona bem-estar em cada detalhe.</p>
+                <div class="footer-icons">
+                  <ul>
+                    <li>
+                      <a href="#"><i class="bi bi-facebook"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="bi bi-twitter"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="bi bi-instagram"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="bi bi-linkedin"></i></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end single footer -->
+          <div class="col-md-4">
+            <div class="footer-content">
+              <div class="footer-head">
+                <h4>Contacte-nos</h4>
+                <p>
+                  Informações e ao suporte necessário.
+                </p>
+                <div class="footer-contacts">
+                  <p><span>Tel:</span> +244 456 789</p>
+                  <p><span>Email:</span> contact@example.com</p>
+                  <!--p><span>Working Hours:</span> 9am-5pm</p-->
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="footer-area-bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="copyright text-center">
+              <p>
+                2024 &copy; Trabalho de Conclusão de Curso - Engenharia Informática
+              </p>
+            </div>
+            <div class="credits">
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer><!-- End  Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'employee_information/t/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'employee_information/t/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'employee_information/t/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'employee_information/t/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'employee_information/t/assets/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'employee_information/t/assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

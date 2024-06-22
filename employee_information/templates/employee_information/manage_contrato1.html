@@ -1,0 +1,137 @@
+<div class="container-fluid">
+    <form action="" id="contrato-form">
+        <input type="hidden" name="id" value="{% if contrato.pk %}{{ contrato.pk }}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="cliente" class="control-label">Cliente<strong style="color: red;">*</strong></label>
+            <select name="cliente" id="cliente" class="form-select form-select-sm rounded-0" required>
+                {% if not contrato.cliente %}
+                <option value="" disabled selected>Selecionar Cliente</option>
+                {% endif %}
+                {% for cliente in clientes %}
+                    {% if contrato.cliente and contrato.cliente == cliente.id %}
+                    <option value="{{ cliente.id }}" selected>{{ cliente.firstname }} {{ cliente.lastname }}</option>
+                    {% else %}
+                    <option value="{{ cliente.id }}">{{ cliente.firstname }} {{ cliente.lastname }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+      
+
+
+            <div class="form-group mb-3">
+                <label for="apartamento" class="control-label">Apartamento<strong style="color: red;">*</strong></label>
+                <select name="apartamento" id="apartamento" class="form-select form-select-sm rounded-0">
+                    <option value="" {% if not contrato.apartamento %}selected{% endif %}>Selecionar Apartamento</option>
+                    {% for apartamento in apartamentos %}
+                        <option value="{{ apartamento.id }}" {% if contrato.apartamento and contrato.apartamento == apartamento.id %}selected{% endif %}>Ap: {{ apartamento.name }} - Prédio: {{ apartamento.predio }}</option>
+                    {% endfor %}
+                </select>
+    
+                
+    
+    
+    
+            </div>
+            <div class="form-group mb-3">
+                <label for="moradia" class="control-label">Moradia<strong style="color: red;">*</strong></label>
+                <select name="moradia" id="moradia" class="form-select form-select-sm rounded-0">
+                    <option value="" {% if not contrato.moradia %}selected{% endif %}>Selecionar Moradia</option>
+                    {% for moradia in moradias %}
+                        <option value="{{ moradia.id }}" {% if contrato.moradia and contrato.moradia == moradia.id %}selected{% endif %}>M: {{ moradia.name }} - Quadra: {{ moradia.department_id }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label for="data_inicio" class="control-label">Data de Aquisição<strong style="color: red;">*</strong></label>
+                <input type="date" name="data_inicio" id="data_inicio" class="form-control form-control-sm rounded-0" value="{% if contrato.data_inicio %}{{ contrato.data_inicio }}{% endif %}" required>
+            </div>
+            <!--div class="form-group mb-3">
+                <label for="data_fim" class="control-label">Data de Fim<strong style="color: red;">*</strong></label>
+                <input type="date" name="data_fim" id="data_fim" class="form-control form-control-sm rounded-0" value="{% if contrato.data_fim %}{{ contrato.data_fim }}{% endif %}" required>
+            </div-->
+            <div class="form-group mb-3">
+                <label for="valor_contratual" class="control-label">Valor Contratual<strong style="color: red;">*</strong></label>
+                <input type="number" name="valor_contratual" id="valor_contratual" class="form-control form-control-sm rounded-0" value="{% if contrato.valor_contratual %}{{ contrato.valor_contratual }}{% endif %}" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="termos_contrato" class="control-label">Termos do Contrato<strong style="color: red;">*</strong></label>
+                <textarea name="termos_contrato" id="termos_contrato" class="form-control form-control-sm rounded-0" required>{% if contrato.termos_contrato %}{{ contrato.termos_contrato }}{% endif %}</textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="data_assinatura" class="control-label">Data de Assinatura<strong style="color: red;">*</strong></label>
+                <input type="date" name="data_assinatura" id="data_assinatura" class="form-control form-control-sm rounded-0" value="{% if contrato.data_assinatura %}{{ contrato.data_assinatura }}{% endif %}" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="forma_pagamento" class="control-label">Forma de Pagamento<strong style="color: red;">*</strong></label>
+                <input type="text" name="forma_pagamento" id="forma_pagamento" class="form-control form-control-sm rounded-0" value="{% if contrato.forma_pagamento %}{{ contrato.forma_pagamento }}{% endif %}" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="ativo" class="control-label">Ativo<strong style="color: red;">*</strong></label>
+                <select name="ativo" id="ativo" class="form-control form-control-sm rounded-0" required>
+                    <option value="1" {% if contrato.ativo == True %}selected{% endif %}>Sim</option>
+                    <option value="0" {% if contrato.ativo == False %}selected{% endif %}>Não</option>
+                </select>
+            </div>
+    
+
+
+        <!--div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+        </div-->
+    </form>
+</div>
+
+<script>
+    $(function() {
+
+        $('#contrato-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save_contrato1' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("Ocorreu um erro.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("Ocorreu um erro.", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    
+    });
+</script>

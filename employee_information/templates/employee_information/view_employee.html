@@ -1,0 +1,40 @@
+{% load humanize %}
+<style>
+    #uni_modal .modal-footer {
+        display: none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <dl>
+                <dt class="mdc-typography mdc-theme--primary">BI/Passaporte</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.code }}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Nome Completo</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.firstname }} {{ employee.middlename }} {{ employee.lastname }}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Gênero</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.gender }}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Data de nascimento</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.dob|date:'M d, Y' }}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Idade</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.age }}</dd>
+
+            </dl>
+        </div>
+        <div class="col-sm-6">
+            <dl>
+                <dt class="mdc-typography mdc-theme--primary">Email</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.email }}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Contacto</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.contact }}</dd>
+                <dt class="mdc-typography mdc-theme--primary">Nacionalidade</dt>
+                <dd class="ps-3 fw-bolder">{{ employee.nacionlidade }}</dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="clear-fix py-3"></div>
+    <div class="d-flex w-100 align-items-center justify-content-end">
+        <button class="btn btn-default border btn-sm rounded-0 d-flex align-items-center" type="button" data-bs-dismiss="modal"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">close</i> Fechar</button>
+    </div>
+</div>

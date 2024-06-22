@@ -1,0 +1,95 @@
+<div class="container-fluid">
+    <form action="" id="apartamento-form">
+        <input type="hidden" name="id" value="{% if apartamento.pk %}{{apartamento.pk}}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="name" class="control-label">Apartamento<strong style="color: red;">*</strong></label>
+            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="{% if apartamento.name %}{{apartamento.name}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="predio" class="control-label">Prédio<strong style="color: red;">*</strong></label>
+            <select name="predio" id="predio" class="form-select form-select-sm rounded-0" required>
+                {% if not apartamento.predio %}
+                <option value="1" disabled selected>Seleciona a Prédio aqui</option>
+                {% else %}
+                <option value="1" disabled>Seleciona a Prédio aqui</option>
+                {% endif %}
+                {% for department in predios %}
+                    {% if apartamento.predio and apartamento.predio == department.id %}
+                    <option value="{{ department.id }}" selected>Prédio:{{ department.name }} - Quadra:{{ department.department_id }}</option>
+                    {% else %}
+                    <option value="{{ department.id }}">Nº{{ department.name }} - Quadra:{{ department.department_id }}</option>
+                    {% endif %}
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="status" class="control-label">Estado<strong style="color: red;">*</strong></label>
+            <select name="status" id="status" class="form-control form-control-sm rounded-0" required>
+            {% if predio.status and predio.status == 1 %}
+            <option value="1" selected>Ativo</option>
+            {% else %}
+            <option value="1">Ativo</option>
+            {% endif %}
+
+            {% if predio.status and predio.status == 0 %}
+            <option value="0" selected>Inativo</option>
+            {% else %}
+            <option value="0">Inativo</option>
+            {% endif %}
+        </select>
+        </div>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#apartamento-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-apartamento-page' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("Ocorreu um erro", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("Ocorreu um erro", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>

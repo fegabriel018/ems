@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    <form action="" id="predio-form">
+        <input type="hidden" name="id" value="{% if predio.pk %}{{predio.pk}}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="name" class="control-label">Predio<strong style="color: red;">*</strong></label>
+            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="{% if predio.name %}{{predio.name}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="department_id" class="control-label">Quadra<strong style="color: red;">*</strong></label>
+            <select name="department_id" id="department_id" class="form-select form-select-sm rounded-0" required>
+                {% if not predio.department_id %}
+                <option value="1" disabled selected>Seleciona a quadra aqui</option>
+                {% else %}
+                <option value="1" disabled>Seleciona a quadra aqui</option>
+                {% endif %}
+                {% for department in departments %}
+                    {% if predio.department_id and predio.department_id == department.id %}
+                    <option value="{{ department.id }}" selected>{{ department.name }}</option>
+                    {% else %}
+                    <option value="{{ department.id }}">{{ department.name }}</option>
+                    {% endif %}
+                {% endfor %}
+
+            </select>
+        </div>
+        <div class="form-group mb-3">
+            <label for="loja" class="control-label">Nº de Lojas<strong style="color: red;">*</strong></label>
+            <input type="text" name="loja" id="loja" class="form-control form-control-sm rounded-0" value="{% if predio.loja %}{{predio.loja}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="status" class="control-label">Estado<strong style="color: red;">*</strong></label>
+            <select name="status" id="status" class="form-control form-control-sm rounded-0" required>
+            {% if predio.status and predio.status == 1 %}
+            <option value="1" selected>Ativo</option>
+            {% else %}
+            <option value="1">Ativo</option>
+            {% endif %}
+
+            {% if predio.status and predio.status == 0 %}
+            <option value="0" selected>Inativo</option>
+            {% else %}
+            <option value="0">Inativo</option>
+            {% endif %}
+        </select>
+        </div>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#predio-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-predio-page' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>

@@ -1,0 +1,115 @@
+<div class="container-fluid">
+    <form action="" id="position-form">
+        <input type="hidden" name="id" value="{% if position.pk %}{{position.pk}}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="name" class="control-label">Nº<strong style="color: red;">*</strong></label>
+            <input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="{% if position.name %}{{position.name}}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="department_id" class="control-label">Quadra<strong style="color: red;">*</strong></label>
+            <select name="department_id" id="department_id" class="form-select form-select-sm rounded-0" required>
+                {% if not predio.department_id %}
+                <option value="1" disabled selected>Seleciona a quadra aqui</option>
+                {% else %}
+                <option value="1" disabled>Seleciona a quadra aqui</option>
+                {% endif %}
+                {% for department in departments %}
+                    {% if predio.department_id and predio.department_id == department.id %}
+                    <option value="{{ department.id }}" selected>{{ department.name }}</option>
+                    {% else %}
+                    <option value="{{ department.id }}">{{ department.name }}</option>
+                    {% endif %}
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="description" class="control-label">Tipo de moradia<strong style="color: red;">*</strong></label>
+            <input type="text" name="description" id="description" class="form-control form-control-sm rounded-0" value="{% if position.description %}{{position.description}}{% endif %}" required>
+        </div>
+        <!--div class="form-group mb-3">
+            <label for="description" class="control-label">Tipo</label>
+            <select name="description" id="description" class="form-select form-select-sm rounded-0" required>
+                {% if position.description and position.description == 1 %}
+                <option value="1" selected >Simplex</option>
+                {% else %}
+                <option value="1" > Simplex</option>
+                {% endif %}
+    
+                {% if position.description == 0 %}
+                <option value="0" selected>Duplex</option>
+                {% else %}
+                <option value="0">Duplex</option>
+                {% endif %}
+            </select>
+        </div-->
+        <div class="form-group mb-3">
+            <label for="status" class="control-label">Estado<strong style="color: red;">*</strong></label>
+            <select name="status" id="status" class="form-control form-control-sm rounded-0" required>
+            {% if position.status and position.status == 1 %}
+            <option value="1" selected>Ativo</option>
+            {% else %}
+            <option value="1">Ativo</option>
+            {% endif %}
+
+            {% if position.status and position.status == 0 %}
+            <option value="0" selected>Inativo</option>
+            {% else %}
+            <option value="0">Inativo</option>
+            {% endif %}
+        </select>
+        </div>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#position-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-position-page' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>
