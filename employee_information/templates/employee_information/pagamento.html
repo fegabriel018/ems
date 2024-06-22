@@ -1,0 +1,73 @@
+{% extends "employee_information/base.html" %}
+
+{% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">PAGAMENTOS</h4>
+            <div class="text-start" style="margin-left: 500px;">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" ><a class="mdc-drawer-link" href="{% url 'pagamento_list' %}"><i class="material-icons mdc-button__icon" style="color: aliceblue;">add</i><span style="color: aliceblue;">ALUGUEL</span></a></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" ><a class="mdc-drawer-link" href="{% url 'contrato11' %}"><i class="material-icons mdc-button__icon" style="color: aliceblue;">add</i><span style="color: aliceblue;">VENDA</span></a></button>
+            </div>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" ><a class="mdc-drawer-link" href="{% url 'contrato2' %}"><i class="material-icons mdc-button__icon" style="color: aliceblue;">add</i><span style="color: aliceblue;">LOJA</span></a></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Adicionar Contrato", "{% url 'manage_contrato' %}")
+        })
+        $('.edit-data').click(function() {
+            uni_modal("Editar contrato", "{% url 'manage_contrato' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.delete-data').click(function() {
+            _conf("Tem certeza de que deseja excluir?", "delete_contrato", [$(this).attr('data-id')])
+        })
+
+        $('#search_input').on('input', function() {
+            var searchText = $(this).val().toLowerCase();
+            $('#contrato_table_body tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1)
+            });
+        });
+        
+    })
+
+    function delete_contrato($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete_contrato' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("Ocorreu um erro.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("Ocorreu um erro.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>
+{% endblock ScriptBlock %}

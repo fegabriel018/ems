@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from employee_information.models import Department, Position, Employees, Predio, Apartamento, Contrato, Contrato1, Loja, Contrato2
+from employee_information.models import Department, Position, Employees, Predio, Apartamento, Contrato, Contrato1, Loja, Contrato2, Pagamento
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -923,6 +923,93 @@ def delete_contrato2(request):
     except:
         resp['status'] = 'failed'
     return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+#Pagamentos
+@login_required
+def pagamento(request):
+    return render(request, 'employee_information/pagamento.html')
+
+@login_required
+def pagamento_list(request):
+    pagamentos = Pagamento.objects.all()
+    context = {
+        'page_title': 'Pagamentos',
+        'pagamentos': pagamentos,
+    }
+    return render(request, 'employee_information/pagamento_list.html', context)
+
+@login_required
+def manage_pagamento(request):
+    pagamento = {}
+    contratos = Contrato.objects.all()
+
+    if request.method == 'GET':
+        data = request.GET
+        id = ''
+        if 'id' in data:
+            id = data['id']
+        if id.isnumeric() and int(id) > 0:
+            pagamento = Pagamento.objects.filter(id=id).first()
+
+    context = {
+        'pagamento': pagamento,
+        'contratos': contratos,
+    }
+    return render(request, 'employee_information/manage_pagamento.html', context)
+
+
+
+@login_required
+def save_pagamento(request):
+    data = request.POST
+    resp = {'status': 'failed'}
+
+    try:
+        contrato = Contrato.objects.filter(id=data['contrato']).first()
+
+        if contrato is None:
+            resp['msg'] = 'Selecione um contrato válido.'
+            return HttpResponse(json.dumps(resp), content_type="application/json")
+
+        if 'id' in data and data['id'].isnumeric() and int(data['id']) > 0:
+            pagamento = Pagamento.objects.filter(id=data['id']).first()
+            if pagamento:
+                pagamento.contrato = contrato
+                pagamento.valor_pago = data['valor_pago']
+                pagamento.data_pagamento = data['data_pagamento']
+                pagamento.metodo_pagamento = data['metodo_pagamento']
+                pagamento.mes = data['mes']
+                pagamento.save()
+                resp['status'] = 'success'
+        else:
+            pagamento = Pagamento(
+                contrato=contrato,
+                valor_pago=data['valor_pago'],
+                data_pagamento=data['data_pagamento'],
+                metodo_pagamento=data['metodo_pagamento'],
+                mes=data['mes'],
+            )
+            pagamento.save()
+            resp['status'] = 'success'
+
+    except Exception as e:
+        print(e)
+        resp['status'] = 'failed'
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+@login_required
+def delete_pagamento(request):
+    data = request.POST
+    resp = {'status': ''}
+    try:
+        Pagamento.objects.filter(id=data['id']).delete()
+        resp['status'] = 'success'
+    except:
+        resp['status'] = 'failed'
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
 
 
 

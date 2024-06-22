@@ -143,3 +143,30 @@ class Contrato2(models.Model):
     
     def __str__(self):
         return f"Contrato de {self.cliente} - Apartamento: {self.apartamento}"
+    
+class Pagamento(models.Model):
+    contrato = models.ForeignKey(Contrato, on_delete=models.CASCADE)
+    valor_pago = models.DecimalField(max_digits=10, decimal_places=2)
+    data_pagamento = models.DateField(default=timezone.now)
+    metodo_pagamento = models.CharField(max_length=100)
+    mes = models.CharField(max_length=100, null=False, default='')
+    def __str__(self):
+        return f"Pagamento de {self.valor_pago} para {self.contrato.cliente} em {self.data_pagamento}"
+    
+    
+class Pagamento1(models.Model):
+    contrato = models.ForeignKey(Contrato1, on_delete=models.CASCADE)
+    valor_pago = models.DecimalField(max_digits=10, decimal_places=2)
+    data_pagamento = models.DateField(default=timezone.now)
+    metodo_pagamento = models.CharField(max_length=100)
+    def __str__(self):
+        return f"Pagamento de {self.valor_pago} para {self.contrato.cliente} em {self.data_pagamento}"
+    
+
+class Pagamento2(models.Model):
+    contrato = models.ForeignKey(Contrato2, on_delete=models.CASCADE)
+    valor_pago = models.DecimalField(max_digits=10, decimal_places=2)
+    data_pagamento = models.DateField(default=timezone.now)
+    metodo_pagamento = models.CharField(max_length=100)
+    def __str__(self):
+        return f"Pagamento de {self.valor_pago} para {self.contrato.cliente} em {self.data_pagamento}"

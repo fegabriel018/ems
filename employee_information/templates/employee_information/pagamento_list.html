@@ -1,0 +1,116 @@
+{% extends "employee_information/base.html" %}
+
+{% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">PAGAMENTOS DE ALUGUEL</h4>
+            
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" ><a class="mdc-drawer-link" href="{% url 'pagamento' %}">
+                    <i class="material-icons mdc-button__icon" style="color: aliceblue;">arrow_back</i><span style="color: aliceblue;">VOLTAR</span></a>
+                </button>
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" id="create_new"><i class="material-icons mdc-button__icon">add</i><span> NOVO</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <div class="mb-3">
+                <input type="text" class="form-control form-control-sm" id="search_input" placeholder="Pesquisar">
+            </div>
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="20%">
+                    <col width="20%">
+                    <col width="20%">
+                    <col width="20%">
+                    <col width="20%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">Cliente</th>
+                        <th class="text-center py-1">Data de Pagamento</th>
+                        <th class="text-center py-1">Valor</th>
+                        <th class="text-center py-1">Mês de Pagamento</th>
+                        <th class="text-center py-1">Método de Pagamento</th>
+                        <th class="text-center py-1">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="pagamento_table_body">
+                    {% for pagamento in pagamentos %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ pagamento.contrato.cliente.firstname }} {{ pagamento.contrato.cliente.lastname }} {{ pagamento.contrato.cliente.code }}</td>
+                        <td class="px-2 py-1 text-center">{{ pagamento.data_pagamento }}</td>
+                        <td class="px-2 py-1 text-center">{{ pagamento.valor_pago }}</td>
+                        <td class="px-2 py-1 text-center">{{ pagamento.mes }}</td>
+                        <td class="px-2 py-1 text-center">{{ pagamento.metodo_pagamento }}</td>
+                        <td class="px-2 py-1 text-center">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded edit-data" type="button" data-id="{{ pagamento.pk }}" title="Editar">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--danger mdc-ripple-upgraded delete-data" type="button" data-id="{{ pagamento.pk }}" title="Excluir">
+                                <i class="material-icons mdc-button__icon">delete_outline</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Adicionar Pagamento", "{% url 'manage_pagamento' %}")
+        })
+        $('.edit-data').click(function() {
+            uni_modal("Editar Pagamento", "{% url 'manage_pagamento' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.delete-data').click(function() {
+            _conf("Tem certeza de que deseja excluir?", "delete_pagamento", [$(this).attr('data-id')])
+        })
+
+        $('#search_input').on('input', function() {
+            var searchText = $(this).val().toLowerCase();
+            $('#pagamento_table_body tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1)
+            });
+        });
+    })
+
+    function delete_pagamento($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete_pagamento' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("Ocorreu um erro.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("Ocorreu um erro.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>
+{% endblock ScriptBlock %}

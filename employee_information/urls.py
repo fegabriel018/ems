@@ -71,6 +71,12 @@ urlpatterns = [
     path('backup/', views.backup_database, name='backup-database'),  
     path('backup1/', views.beckup, name='backup1'),
     
+    #Pagamento    
+    path('pagamento_list', views.pagamento_list, name='pagamento_list'),
+    path('manage_pagamento', views.manage_pagamento, name='manage_pagamento'),
+    path('save_pagamento', views.save_pagamento, name='save_pagamento'),
+    path('delete_pagamento', views.delete_pagamento, name='delete_pagamento'),
+    path('pagamento/', views.pagamento, name='pagamento'),
 
     
     #path('download_contrato', views.download_contrato, name='download_contrato'),

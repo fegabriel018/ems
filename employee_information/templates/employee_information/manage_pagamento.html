@@ -1,0 +1,91 @@
+<div class="container-fluid">
+    <form action="" id="pagamento-form">
+        <input type="hidden" name="id" value="{% if pagamento.pk %}{{ pagamento.pk }}{% endif %}">
+        <div class="form-group mb-3">
+            <label for="contrato" class="control-label">Contrato<strong style="color: red;">*</strong></label>
+            <select name="contrato" id="contrato" class="form-select form-select-sm rounded-0" required>
+                {% if not pagamento.contrato %}
+                <option value="" disabled selected>Selecionar Contrato</option>
+                {% endif %}
+                {% for contrato in contratos %}
+                    {% if pagamento.contrato and pagamento.contrato.id == contrato.id %}
+                    <option value="{{ contrato.id }}" selected>{{ contrato.cliente.firstname }} {{ contrato.cliente.lastname }} {{ pagamento.contrato.cliente.code }}</option>
+                    {% else %}
+                    <option value="{{ contrato.id }}">{{ contrato.cliente.firstname }} {{ contrato.cliente.lastname }} {{ pagamento.contrato.cliente.code }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group mb-3">
+            <label for="valor_pago" class="control-label">Valor Pago<strong style="color: red;">*</strong></label>
+            <input type="number" name="valor_pago" id="valor_pago" class="form-control form-control-sm rounded-0" value="{% if pagamento.valor_pago %}{{ pagamento.valor_pago }}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="data_pagamento" class="control-label">Data de Pagamento<strong style="color: red;">*</strong></label>
+            <input type="date" name="data_pagamento" id="data_pagamento" class="form-control form-control-sm rounded-0" value="{% if pagamento.data_pagamento %}{{ pagamento.data_pagamento }}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="metodo_pagamento" class="control-label">Mês de Pagamento<strong style="color: red;">*</strong></label>
+            <input type="text" name="mes" id="mes" class="form-control form-control-sm rounded-0" value="{% if pagamento.mes %}{{ pagamento.mes }}{% endif %}" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="metodo_pagamento" class="control-label">Método de Pagamento<strong style="color: red;">*</strong></label>
+            <input type="text" name="metodo_pagamento" id="metodo_pagamento" class="form-control form-control-sm rounded-0" value="{% if pagamento.metodo_pagamento %}{{ pagamento.metodo_pagamento }}{% endif %}" required>
+        </div>
+        <!--div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+        </div-->
+    </form>
+</div>
+
+<script>
+    $(function() {
+        $('#pagamento-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('.err-msg').remove();
+            var el = $('<div>');
+            el.addClass("alert alert-danger err-msg");
+            el.hide();
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save_pagamento' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err);
+                    alert_toast("Ocorreu um erro.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg");
+                        location.reload();
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg);
+                    } else {
+                        el.text("Ocorreu um erro.", 'error');
+                        end_loader();
+                        console.err(resp);
+                    }
+                    _this.prepend(el);
+                    el.show('slow');
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader();
+                }
+            });
+        });
+    });
+</script>
