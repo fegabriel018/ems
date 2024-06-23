@@ -170,3 +170,26 @@ class Pagamento2(models.Model):
     metodo_pagamento = models.CharField(max_length=100)
     def __str__(self):
         return f"Pagamento de {self.valor_pago} para {self.contrato.cliente} em {self.data_pagamento}"
+    
+    
+    
+    
+
+class Manutencao(models.Model):
+    apartamento = models.ForeignKey(Apartamento, on_delete=models.CASCADE, null=True, blank=True)
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, null=True, blank=True)
+    moradia = models.ForeignKey(Position, on_delete=models.CASCADE, null=True, blank=True)
+    valor_pago = models.DecimalField(max_digits=10, decimal_places=2)
+    data_manutencao = models.DateField(default=timezone.now)
+    descricao = models.TextField()
+    tipo = models.CharField(max_length=20, default="")
+
+    def __str__(self):
+        if self.apartamento:
+            return f"Manutenção de apartamento {self.apartamento.name} - Valor pago: {self.valor_pago} KZ"
+        elif self.loja:
+            return f"Manutenção de loja {self.loja.name} - Valor pago: {self.valor_pago} KZ"
+        elif self.moradia:
+            return f"Manutenção de moradia {self.moradia.name} - Valor pago: {self.valor_pago} KZ"
+        else:
+            return f"Manutenção não associada - Valor pago: {self.valor_pago} KZ"

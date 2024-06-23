@@ -82,6 +82,12 @@ urlpatterns = [
     path('manage_pagamento1', views.manage_pagamento1, name='manage_pagamento1'),
     path('save_pagamento1', views.save_pagamento1, name='save_pagamento1'),
     path('delete_pagamento1', views.delete_pagamento1, name='delete_pagamento1'),
+    
+    #Manuntenção
+    path('manutencao', views.manutencao, name='manutencao'),
+    path('manage_manutencao', views.manage_manutencao, name='manage_manutencao'),
+    path('save_manutencao', views.save_manutencao, name='save_manutencao'),
+    path('delete_manutencao', views.delete_manutencao, name='delete_manutencao'),
 
     
     #path('download_contrato', views.download_contrato, name='download_contrato'),

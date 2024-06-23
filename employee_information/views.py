@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from employee_information.models import Department, Position, Employees, Predio, Apartamento, Contrato, Contrato1, Loja, Contrato2, Pagamento, Pagamento1, Pagamento2
+from employee_information.models import Department, Position, Employees, Predio, Apartamento, Contrato, Contrato1, Loja, Contrato2, Pagamento, Pagamento1, Pagamento2, Manutencao
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -1092,6 +1092,123 @@ def delete_pagamento1(request):
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+
+
+#MANUTENÇÃO
+@login_required
+def manutencao(request):
+    manutencoes = Manutencao.objects.all()
+    context = {
+        'page_title': 'Manutenções',
+        'manutencoes': manutencoes,
+    }
+    return render(request, 'employee_information/manutencao.html', context)
+
+@login_required
+def manage_manutencao(request):
+    manutencao = None
+    apartamentos = Apartamento.objects.all()
+    moradias = Position.objects.all()
+    lojas = Loja.objects.all()
+
+    if request.method == 'GET':
+        data = request.GET
+        id = data.get('id', '')
+        if id.isnumeric() and int(id) > 0:
+            manutencao = Manutencao.objects.filter(id=id).first()
+
+    context = {
+        'manutencao': manutencao,
+        'apartamentos': apartamentos,
+        'moradias': moradias,
+        'lojas': lojas,
+    }
+    return render(request, 'employee_information/manage_manutencao.html', context)
+
+@login_required
+def save_manutencao(request):
+    data = request.POST
+    resp = {'status': 'failed'}
+
+    try:
+        # Recuperar os dados básicos do formulário
+        valor_pago = data.get('valor_pago')
+        data_manutencao = data.get('data_manutencao')
+        descricao = data.get('descricao')
+        tipo = data.get('tipo')
+
+        # Verificar e recuperar o tipo específico
+        if tipo == 'apartamento':
+            entidade = Apartamento.objects.get(id=data.get('apartamento'))
+        elif tipo == 'moradia':
+            entidade = Position.objects.get(id=data.get('moradia'))
+        elif tipo == 'loja':
+            entidade = Loja.objects.get(id=data.get('loja'))
+        else:
+            resp['msg'] = 'Tipo de manutenção inválido.'
+            return HttpResponse(json.dumps(resp), content_type="application/json")
+
+        # Verificar se estamos editando uma manutenção existente
+        if 'id' in data and data['id'].isnumeric() and int(data['id']) > 0:
+            manutencao = Manutencao.objects.filter(id=data['id']).first()
+            if manutencao:
+                manutencao.valor_pago = valor_pago
+                manutencao.data_manutencao = data_manutencao
+                manutencao.descricao = descricao
+                manutencao.tipo = tipo
+                if tipo == 'apartamento':
+                    manutencao.apartamento = entidade
+                    manutencao.moradia = None
+                    manutencao.loja = None
+                elif tipo == 'moradia':
+                    manutencao.moradia = entidade
+                    manutencao.apartamento = None
+                    manutencao.loja = None
+                elif tipo == 'loja':
+                    manutencao.loja = entidade
+                    manutencao.apartamento = None
+                    manutencao.moradia = None
+                manutencao.save()
+                resp['status'] = 'success'
+            else:
+                resp['msg'] = 'Manutenção não encontrada.'
+        else:
+            # Criar uma nova manutenção
+            manutencao = Manutencao(
+                valor_pago=valor_pago,
+                data_manutencao=data_manutencao,
+                descricao=descricao,
+                tipo=tipo
+            )
+            if tipo == 'apartamento':
+                manutencao.apartamento = entidade
+            elif tipo == 'moradia':
+                manutencao.moradia = entidade
+            elif tipo == 'loja':
+                manutencao.loja = entidade
+            manutencao.save()
+            resp['status'] = 'success'
+    except Exception as e:
+        print(e)
+        resp['msg'] = str(e)
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
+
+@login_required
+def delete_manutencao(request):
+    data = request.POST
+    resp = {'status': ''}
+
+    try:
+        Manutencao.objects.filter(id=data['id']).delete()
+        resp['status'] = 'success'
+    except:
+        resp['status'] = 'failed'
+
+    return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
 
